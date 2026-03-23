@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gift Question</title>
+  <style>
+    :root {
+      --bg1: #fff0f7;
+      --bg2: #ffd6ea;
+      --card: rgba(255, 255, 255, 0.88);
+      --text: #2f1f2a;
+      --pink: #ff4f9a;
+      --pink-dark: #db2d7a;
+      --green: #2fbf71;
+      --shadow: 0 20px 50px rgba(219, 45, 122, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #ffffff 0 18%, transparent 19%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.7) 0 12%, transparent 13%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(10px);
+      opacity: 0.45;
+    }
+
+    body::before {
+      width: 220px;
+      height: 220px;
+      background: rgba(255, 255, 255, 0.55);
+      top: -30px;
+      left: -40px;
+    }
+
+    body::after {
+      width: 280px;
+      height: 280px;
+      background: rgba(255, 255, 255, 0.35);
+      right: -60px;
+      bottom: -80px;
+    }
+
+    .wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(92vw, 560px);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 79, 154, 0.14);
+      border-radius: 28px;
+      padding: 28px 22px 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.55));
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 79, 154, 0.1);
+      color: var(--pink-dark);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.05;
+      color: var(--pink-dark);
+    }
+
+    .subtitle {
+      margin: 14px auto 26px;
+      max-width: 34ch;
+      font-size: 1rem;
+      line-height: 1.45;
+      color: rgba(47, 31, 42, 0.78);
+    }
+
+    .stage {
+      position: relative;
+      height: 150px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.25));
+      border: 1px dashed rgba(219, 45, 122, 0.14);
+      overflow: hidden;
+    }
+
+    .buttons {
+      position: relative;
+      width: min(100%, 420px);
+      height: 120px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      position: absolute;
+      min-width: 138px;
+      padding: 16px 28px;
+      border: none;
+      border-radius: 999px;
+      color: white;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, left 0.18s ease, top 0.18s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    #yesBtn {
+      left: 50%;
+      top: 60px;
+      transform: translateX(-112%);
+      background: linear-gradient(180deg, #44d27c, #1fa95b);
+      z-index: 1;
+    }
+
+    #noBtn {
+      left: 50%;
+      top: 60px;
+      transform: translateX(12%);
+      background: linear-gradient(180deg, #ff6b6b, #f03e3e);
+      z-index: 2;
+    }
+
+    .hint {
+      margin-top: 16px;
+      font-size: 0.92rem;
+      color: rgba(47, 31, 42, 0.68);
+    }
+
+    .sparkles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.65;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.85) 0 2px, transparent 3px),
+        radial-gradient(circle at 70% 76%, rgba(255,255,255,0.8) 0 2px, transparent 3px),
+        radial-gradient(circle at 10% 80%, rgba(255,255,255,0.8) 0 2px, transparent 3px);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px 16px 20px;
+        border-radius: 24px;
+      }
+
+      .stage {
+        height: 180px;
+      }
+
+      .buttons {
+        width: 100%;
+      }
+
+      .btn {
+        min-width: 120px;
+        padding: 15px 22px;
+        font-size: 1rem;
+      }
+
+      #yesBtn {
+        transform: translateX(-108%);
+      }
+
+      #noBtn {
+        transform: translateX(8%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="Gift question">
+      <div class="sparkles" aria-hidden="true"></div>
+      <div class="content">
+        <div class="badge">A tiny question for Bub</div>
+        <h1>Hi Bub would u like to receive a gift ?</h1>
+        <p class="subtitle">
+          Try to catch <b>No</b> if you can. It keeps escaping, and <b>Yes</b> waits politely in the gap.
+        </p>
+
+        <div class="stage">
+          <div class="buttons" id="buttonsArea">
+            <button id="yesBtn" class="btn" type="button">Yes</button>
+            <button id="noBtn" class="btn" type="button">No</button>
+          </div>
+        </div>
+
+        <div class="hint">Click Yes to open WhatsApp with the message already filled in.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const buttonsArea = document.getElementById('buttonsArea');
+
+    const phoneNumber = '919420065929';
+    const message = 'ohh yes baby I want to';
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function randomPosition(btn) {
+      const area = buttonsArea.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      const maxX = Math.max(0, area.width - btnRect.width);
+      const maxY = Math.max(0, area.height - btnRect.height);
+      return {
+        x: Math.floor(Math.random() * maxX),
+        y: Math.floor(Math.random() * maxY),
+      };
+    }
+
+    function moveNoButton() {
+      const pos = randomPosition(noBtn);
+      noBtn.style.left = `${pos.x}px`;
+      noBtn.style.top = `${pos.y}px`;
+      noBtn.style.transform = 'none';
+
+      const yesLeft = clamp(pos.x - 18, 0, buttonsArea.clientWidth - yesBtn.offsetWidth);
+      const yesTop = clamp(pos.y + 6, 0, buttonsArea.clientHeight - yesBtn.offsetHeight);
+      yesBtn.style.left = `${yesLeft}px`;
+      yesBtn.style.top = `${yesTop}px`;
+      yesBtn.style.transform = 'none';
+    }
+
+    function evade(event) {
+      event.preventDefault();
+      noBtn.style.position = 'absolute';
+      noBtn.style.zIndex = '3';
+      yesBtn.style.zIndex = '1';
+      moveNoButton();
+    }
+
+    function resetButtons() {
+      yesBtn.style.left = '50%';
+      yesBtn.style.top = '60px';
+      yesBtn.style.transform = 'translateX(-112%)';
+
+      noBtn.style.left = '50%';
+      noBtn.style.top = '60px';
+      noBtn.style.transform = 'translateX(12%)';
+      noBtn.style.position = 'absolute';
+      noBtn.style.zIndex = '2';
+    }
+
+    noBtn.addEventListener('pointerenter', evade);
+    noBtn.addEventListener('pointerdown', evade);
+    noBtn.addEventListener('click', evade);
+    noBtn.addEventListener('touchstart', evade, { passive: false });
+
+    yesBtn.addEventListener('pointerenter', () => {
+      if (noBtn.style.position === 'absolute') {
+        moveNoButton();
+      }
+    });
+
+    yesBtn.addEventListener('click', function () {
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.location.href = whatsappUrl;
+    });
+
+    window.addEventListener('resize', resetButtons);
+
+    resetButtons();
+  </script>
+</body>
+</html>
